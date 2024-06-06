@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import './App.css';
 
 function App() {
-  let [champions, setChampions] = useState([]);
+  let [ids, setIds] = useState([]);
+  let [names, setNames] = useState([]);
   let [blue, setBlue] = useState([]);
   let [red, setRed] = useState([]);
 
@@ -12,8 +13,10 @@ function App() {
 
   const fetchChampions = async () => {
     const response = await fetch("https://ddragon.leagueoflegends.com/cdn/14.11.1/data/en_US/champion.json");
-    const championsData = await response.json();
-    setChampions(Object.keys(championsData.data));
+    const champions = await response.json();
+    const keys = Object.keys(champions.data);
+    setIds(keys);
+    setNames(keys.map(key => champions.data[key].name));
   };
 
   const createTeams = () => {
@@ -21,7 +24,7 @@ function App() {
     let blue = [];
     let red = [];
     for(let i = 0; i < 10; i++) {
-      let number = Math.floor(Math.random() * champions.length);
+      let number = Math.floor(Math.random() * ids.length);
       if(numbers.includes(number)) {
         i--;
       } else {
@@ -35,11 +38,14 @@ function App() {
     setRed(red);
   }
 
-  let mapTeam = team => team.map(index => {
+  let mapTeam = team => team.map((number, index) => {
       return (
-        <div key={index}>
-          <img src={`https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/${champions[index]}.png`} alt={champions[index]}/>
-          <p>{champions[index]}</p>
+        <div key={index} className="summoner">
+          <img src={`https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/${ids[number]}.png`} alt={names[number]}/>
+          <div>
+            <p>{names[number]}</p>
+            <input placeholder={`Summoner ${index + 1}`} maxLength="16"/>
+          </div>
         </div>
       )
     });
@@ -47,7 +53,7 @@ function App() {
   return (
     <div>
       <header>
-
+        <h1>ARAM Randomizer</h1>
       </header>
       <main>
         <div className="versus">
