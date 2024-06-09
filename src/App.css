@@ -4,35 +4,51 @@
   box-sizing: border-box;
   font-family: sans-serif;
 }
+:root {
+  --beige: #CDBE91;
+  --gold: #C89B3C;
+}
 @font-face {
   font-family: "BeaufortforLOL-Bold";
   src: local("BeaufortforLOL-Bold"), url("./BeaufortforLOL-Bold.otf") format("opentype");
 }
 body {
-  color: #C89B3C;
+  color: var(--gold);
   background: #010A13;
+  background-image: linear-gradient(to right, rgb(0, 0, 255, .5), rgb(0, 0, 255, .25), #010A13, #010A13, rgb(255, 0, 0, .25), rgb(255, 0, 0, .5));
+  background-attachment: fixed;
 }
 h1 {
-  margin: 1em;
+  padding: 1em;
   font-size: 2.5em;
   text-align: center;
   font-family: "BeaufortforLOL-Bold";
 }
-.versus {
+main {
   display: flex;
   align-items: center;
+  border-top: 2px solid;
   justify-content: space-between;
 }
-input, ::placeholder {
-  border: none;
-  background: none;
-  color: #C89B3C;
+.middle {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+button {
+  padding: 1em 2em;
+  color: var(--beige);
+  background: #1E2328;
+  text-transform: uppercase;
+  border: 2px solid var(--gold);
+  font-family: "BeaufortforLOL-Bold";
+  cursor: pointer;
 }
 .summoner {
   display: flex;
-  border: 2px solid;
+  text-align: center;
   align-items: center;
-  margin-bottom: -2px;
+  border-bottom: 2px solid;
 }
 .summoner img {
   margin: 1em;
@@ -40,4 +56,13 @@ input, ::placeholder {
   height: 100px;
   border: 2px solid;
   border-radius: 100%;
+}
+input {
+  border: none;
+  background: none;
+  text-align: center;
+  padding: .25em;
+  margin-top: .25em;
+  color: var(--gold);
+  cursor: pointer;
 }
