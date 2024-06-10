@@ -5,7 +5,7 @@ function App() {
   let [ids, setIds] = useState([]);
   let [names, setNames] = useState([]);
   let [blue, setBlue] = useState(["a", "b", "c", "d", "e"]);
-  let [red, setRed] = useState(["a", "b", "c", "d", "e"]);
+  let [red, setRed] = useState(["f", "g", "h", "i", "j"]);
   let [hideBlue, setHideBlue] = useState(true);
   let [hideRed, setHideRed] = useState(true);
 
@@ -40,34 +40,23 @@ function App() {
     setRed(red);
   }
 
-  let mapBlue = blue.map((number, index) => {
-    return (
-      <div key={index} className="summoner">
-        { typeof blue[0] === "string" || hideBlue
-        ? <img src="https://ddragon.leagueoflegends.com/cdn/14.11.1/img/profileicon/29.png" alt="default profile icon"/>
-        : <img src={`https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/${ids[number]}.png`} alt={names[number]}/> }
-        <div>
-          { typeof blue[0] === "string" || hideBlue
-          ? null
-          : <p>{names[number]}</p> }
-          <input placeholder={`Summoner ${index + 1}`} maxLength="16" spellCheck="false"/>
-        </div>
-      </div>
-    )
-  });
+  let mapTeam = (team, color) => team.map((number, index) => {
+    let hidden = color === "blue" ? hideBlue : hideRed;
 
-  let mapRed = red.map((number, index) => {
+    let img = typeof number === "string" || hidden
+      ? <img src="https://ddragon.leagueoflegends.com/cdn/14.11.1/img/profileicon/29.png" alt="helmet bro icon"/>
+      : <img src={`https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/${ids[number]}.png`} alt={names[number]}/>
+
+    let div = <div>
+                { typeof number === "string" || hidden
+                  ? null
+                  : <p>{names[number]}</p> }
+                <input placeholder={`Summoner ${index + 1}`} spellCheck="false"/>
+              </div>
+
     return (
-      <div key={index} className="summoner">
-        <div>
-          { typeof red[0] === "string" || hideRed
-          ? null
-          : <p>{names[number]}</p> }
-          <input placeholder={`Summoner ${index + 1}`} maxLength="16" spellCheck="false"/>
-        </div>
-        { typeof red[0] === "string" || hideRed
-        ? <img src="https://ddragon.leagueoflegends.com/cdn/14.11.1/img/profileicon/29.png" alt="default profile icon"/>
-        : <img src={`https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/${ids[number]}.png`} alt={names[number]}/> }
+      <div key={number} className="summoner">
+        { color === "blue" ? [img, div] : [div, img] }
       </div>
     )
   });
@@ -79,20 +68,20 @@ function App() {
       </header>
       <main>
         <div>
-          {mapBlue}
+          {mapTeam(blue, "blue")}
         </div>
-          <div className="middle">
-            <button onClick={() => createTeams()}>Accept!</button>
-            <h2>Toggle Visibility</h2>
-            <div>
-              <label>Blue Team</label>
-              <input type="checkbox" onClick={() => setHideBlue(!hideBlue)} checked={hideBlue}/>
-              <label>Red Team</label>
-              <input type="checkbox" onClick={() => setHideRed(!hideRed)} checked={hideRed}/>
-            </div>
+        <div className="middle">
+          <button onClick={() => createTeams()}>Accept!</button>
+          <h2>Toggle Visibility</h2>
+          <div>
+            <label>Blue Team</label>
+            <input type="checkbox" onChange={() => setHideBlue(!hideBlue)} checked={hideBlue}/>
+            <label>Red Team</label>
+            <input type="checkbox" onChange={() => setHideRed(!hideRed)} checked={hideRed}/>
           </div>
+        </div>
         <div>
-          {mapRed}
+          {mapTeam(red, "red")}
         </div>
       </main>
     </div>

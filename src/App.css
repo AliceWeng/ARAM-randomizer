@@ -27,7 +27,7 @@ h1 {
 main {
   display: flex;
   align-items: center;
-  border-top: 2px solid;
+  border-top: 1px solid;
   justify-content: space-between;
 }
 .middle {
@@ -40,7 +40,7 @@ button {
   color: var(--beige);
   background: #1E2328;
   text-transform: uppercase;
-  border: 2px solid var(--gold);
+  border: 1px solid var(--gold);
   font-family: "BeaufortforLOL-Bold";
   cursor: pointer;
 }
@@ -48,7 +48,7 @@ button {
   display: flex;
   text-align: center;
   align-items: center;
-  border-bottom: 2px solid;
+  border-bottom: 1px solid;
 }
 .summoner img {
   margin: 1em;
