@@ -4,10 +4,12 @@ import './App.css';
 function App() {
   let [ids, setIds] = useState([]);
   let [names, setNames] = useState([]);
-  let [blue, setBlue] = useState(["a", "b", "c", "d", "e"]);
-  let [red, setRed] = useState(["f", "g", "h", "i", "j"]);
-  let [hideBlue, setHideBlue] = useState(true);
-  let [hideRed, setHideRed] = useState(true);
+  let [championPool, setChampionPool] = useState([]);
+  let [blue, setBlue] = useState([]);
+  let [red, setRed] = useState([]);
+  let [hideBlue, setHideBlue] = useState(false);
+  let [hideRed, setHideRed] = useState(false);
+  let [selected, setSelected] = useState();
 
   useEffect(() => {
     fetchChampions();
@@ -25,13 +27,13 @@ function App() {
     let numbers = [];
     let blue = [];
     let red = [];
-    for(let i = 0; i < 10; i++) {
+    for(let i = 0; i < 30; i++) {
       let number = Math.floor(Math.random() * ids.length);
       if(numbers.includes(number)) {
         i--;
       } else {
         numbers.push(number);
-        if(numbers.length <= 5) {
+        if(numbers.length <= 15) {
           blue.push(number);
         } else red.push(number);
       }
@@ -40,51 +42,81 @@ function App() {
     setRed(red);
   }
 
-  let mapTeam = (team, color) => team.map((number, index) => {
-    let hidden = color === "blue" ? hideBlue : hideRed;
+  let team = color => {
+    let team = [];
+    for(let i = 0; i < 5; i++) {
+      let hidden = color === blue ? hideBlue : hideRed;
+      let img = color[i] === undefined || hidden
+        ? <img key={i} src="https://ddragon.leagueoflegends.com/cdn/14.11.1/img/profileicon/29.png" alt="helmet bro icon"/>
+        : <img key={i} src={`https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/${ids[color[i]]}.png`} alt={names[color[i]]}/>
+      let div = <div key={i + 1}>
+                  { color[i] === undefined || hidden
+                    ? null
+                    : <p>{names[color[i]]}</p> }
+                  <input type="text" placeholder={`Summoner ${i + 1}`} spellCheck="false"/>
+                </div>
+      team.push(
+        <div key={i} className="summoner">
+          { color === blue ? [img, div] : [div, img] }
+        </div>
+      )
+    }
+    return team;
+  }
 
-    let img = typeof number === "string" || hidden
-      ? <img src="https://ddragon.leagueoflegends.com/cdn/14.11.1/img/profileicon/29.png" alt="helmet bro icon"/>
-      : <img src={`https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/${ids[number]}.png`} alt={names[number]}/>
-
-    let div = <div>
-                { typeof number === "string" || hidden
-                  ? null
-                  : <p>{names[number]}</p> }
-                <input placeholder={`Summoner ${index + 1}`} spellCheck="false"/>
-              </div>
-
-    return (
-      <div key={number} className="summoner">
-        { color === "blue" ? [img, div] : [div, img] }
-      </div>
-    )
-  });
+  let rerolls = color => {
+    let rerolls = [];
+    for(let i = 5; i < 15; i++) {
+      let hidden = color === blue ? hideBlue : hideRed;
+      rerolls.push(
+        <div key={i} className="reroll">
+          { color[i] === undefined || hidden 
+            ? null
+            : <img
+                onClick={() => setSelected(color[i])}
+                title={names[color[i]]}
+                src={`https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/${ids[color[i]]}.png`}
+                alt={names[color[i]]}/> }
+        </div>
+      )
+    }
+    return rerolls;
+  }
 
   return (
-    <div>
+    <>
       <header>
         <h1>ARAM Randomizer</h1>
       </header>
       <main>
-        <div>
-          {mapTeam(blue, "blue")}
-        </div>
-        <div className="middle">
-          <button onClick={() => createTeams()}>Accept!</button>
-          <h2>Toggle Visibility</h2>
+        <div style={{display: "flex"}}>
           <div>
-            <label>Blue Team</label>
-            <input type="checkbox" onChange={() => setHideBlue(!hideBlue)} checked={hideBlue}/>
-            <label>Red Team</label>
-            <input type="checkbox" onChange={() => setHideRed(!hideRed)} checked={hideRed}/>
+            {team(blue)}
+          </div>
+          <div>
+            {rerolls(blue)}
           </div>
         </div>
-        <div>
-          {mapTeam(red, "red")}
+        <div className="controls">
+          <button onClick={() => createTeams()}>Accept!</button>
+          <h2>Hide Visibility</h2>
+          <div>
+            <label htmlFor="toggleBlue">Blue Team</label>
+            <input id="toggleBlue" type="checkbox" onChange={() => setHideBlue(!hideBlue)}/>
+            <label htmlFor="toggleRed">Red Team</label>
+            <input id="toggleRed" type="checkbox" onChange={() => setHideRed(!hideRed)}/>
+          </div>
+        </div>
+        <div style={{display: "flex"}}>
+          <div>
+            {rerolls(red)}
+          </div>
+          <div>
+            {team(red)}
+          </div>
         </div>
       </main>
-    </div>
+    </>
   );
 }
 

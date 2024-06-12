@@ -5,7 +5,6 @@
   font-family: sans-serif;
 }
 :root {
-  --beige: #CDBE91;
   --gold: #C89B3C;
 }
 @font-face {
@@ -15,8 +14,8 @@
 body {
   color: var(--gold);
   background: #010A13;
-  background-image: linear-gradient(to right, rgb(0, 0, 255, .5), rgb(0, 0, 255, .25), #010A13, #010A13, rgb(255, 0, 0, .25), rgb(255, 0, 0, .5));
   background-attachment: fixed;
+  background-image: linear-gradient(to right, rgb(0, 0, 255, .5), rgb(0, 0, 255, .25), #010A13, #010A13, rgb(255, 0, 0, .25), rgb(255, 0, 0, .5));
 }
 h1 {
   padding: 1em;
@@ -27,28 +26,40 @@ h1 {
 main {
   display: flex;
   align-items: center;
-  border-top: 1px solid;
   justify-content: space-between;
+  border-width: 1px 0 1px 0;
+  border-style: solid;
 }
-.middle {
+.controls {
   display: flex;
   align-items: center;
   flex-direction: column;
 }
 button {
   padding: 1em 2em;
-  color: var(--beige);
+  color: #CDFAFA;
   background: #1E2328;
   text-transform: uppercase;
-  border: 1px solid var(--gold);
+  border: 2px solid #0593A7;
   font-family: "BeaufortforLOL-Bold";
   cursor: pointer;
+}
+button:hover {
+  color: white;
+}
+h2 {
+  padding: .25em;
+  font-family: "BeaufortforLOL-Bold";
+}
+label {
+  padding: .5em;
 }
 .summoner {
   display: flex;
   text-align: center;
   align-items: center;
-  border-bottom: 1px solid;
+  border-style: solid;
+  border-width: 1px 0 1px 0;
 }
 .summoner img {
   margin: 1em;
@@ -57,12 +68,25 @@ button {
   border: 2px solid;
   border-radius: 100%;
 }
-input {
+input[type="text"] {
   border: none;
   background: none;
   text-align: center;
-  padding: .25em;
-  margin-top: .25em;
   color: var(--gold);
+  padding: .25em;
+  margin: .25em;
   cursor: pointer;
+}
+.reroll {
+  width: 67px;
+  height: 67px;
+  background: black;
+  border-style: solid;
+  border-width: 1px 2px 1px 2px;
+  /* top, right, bottom, left */
+}
+.reroll img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
