@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/aram-randomizer/static/css/main.84cf36c6.css",
-    "main.js": "/aram-randomizer/static/js/main.fdcd43d8.js",
+    "main.css": "/aram-randomizer/static/css/main.dda68557.css",
+    "main.js": "/aram-randomizer/static/js/main.90e812bc.js",
     "static/media/BeaufortforLOL-Bold.otf": "/aram-randomizer/static/media/BeaufortforLOL-Bold.cd9feab2438eb68ecd1d.otf",
     "index.html": "/aram-randomizer/index.html",
-    "main.84cf36c6.css.map": "/aram-randomizer/static/css/main.84cf36c6.css.map",
-    "main.fdcd43d8.js.map": "/aram-randomizer/static/js/main.fdcd43d8.js.map"
+    "main.dda68557.css.map": "/aram-randomizer/static/css/main.dda68557.css.map",
+    "main.90e812bc.js.map": "/aram-randomizer/static/js/main.90e812bc.js.map"
   },
   "entrypoints": [
-    "static/css/main.84cf36c6.css",
-    "static/js/main.fdcd43d8.js"
+    "static/css/main.dda68557.css",
+    "static/js/main.90e812bc.js"
   ]
 }
