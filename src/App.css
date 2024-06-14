@@ -30,10 +30,13 @@ main {
   border-width: 1px 0 1px 0;
   border-style: solid;
 }
-.controls {
+.container {
+  margin: 1em;
+  padding: 1em;
   display: flex;
   align-items: center;
   flex-direction: column;
+  border: 1px solid;
 }
 button {
   padding: 1em 2em;
@@ -46,13 +49,25 @@ button {
 }
 button:hover {
   color: white;
+  background-image: linear-gradient(#1E2A31, #113C50)
+}
+form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+form div {
+  margin: 1em;
 }
 h2 {
-  padding: .25em;
   font-family: "BeaufortforLOL-Bold";
 }
 label {
   padding: .5em;
+}
+input[type="checkbox"] {
+  margin-top: 1em;
+  cursor: pointer;
 }
 .summoner {
   display: flex;

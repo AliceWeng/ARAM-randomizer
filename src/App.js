@@ -2,14 +2,17 @@ import { useState, useEffect } from "react";
 import './App.css';
 
 function App() {
-  let [ids, setIds] = useState([]);
-  let [names, setNames] = useState([]);
-  let [championPool, setChampionPool] = useState([]);
-  let [blue, setBlue] = useState([]);
-  let [red, setRed] = useState([]);
+  let [ids, setIds] = useState([]); // Used for img src.
+  let [names, setNames] = useState([]); // Used for champion name.
+  let [blueTeam, setBlueTeam] = useState([]);
+  let [redTeam, setRedTeam] = useState([]); 
+  let [bluePlayers, setBluePlayers] = useState(5);
+  let [redPlayers, setRedPlayers] = useState(5);
+  let [blueRerolls, setBlueRerolls] = useState([]);
+  let [redRerolls, setRedRerolls] = useState([]);
   let [hideBlue, setHideBlue] = useState(false);
   let [hideRed, setHideRed] = useState(false);
-  let [selected, setSelected] = useState();
+  let [rolls, setRolls] = useState(0);
 
   useEffect(() => {
     fetchChampions();
@@ -23,29 +26,34 @@ function App() {
     setNames(keys.map(key => champions.data[key].name));
   };
 
-  const createTeams = () => {
-    let numbers = [];
-    let blue = [];
-    let red = [];
-    for(let i = 0; i < 30; i++) {
-      let number = Math.floor(Math.random() * ids.length);
-      if(numbers.includes(number)) {
-        i--;
-      } else {
-        numbers.push(number);
-        if(numbers.length <= 15) {
-          blue.push(number);
-        } else red.push(number);
+  let createTeams = e => {
+    e.preventDefault();
+    if(!blueTeam.length && !redTeam.length) {
+      let numbers = [];
+      let blue = [];
+      let red = [];
+      for(let i = 0; i < Number(bluePlayers) + Number(redPlayers); i++) {
+        let number = Math.floor(Math.random() * ids.length);
+        if(numbers.includes(number)) {
+          i--;
+        } else {
+          numbers.push(number);
+          if(i < bluePlayers) {
+            blue.push(number);
+          } else {
+            red.push(number);
+          }
+        }
       }
+      setBlueTeam(blue);
+      setRedTeam(red);
     }
-    setBlue(blue);
-    setRed(red);
   }
 
-  let team = color => {
+  let renderTeam = color => {
     let team = [];
     for(let i = 0; i < 5; i++) {
-      let hidden = color === blue ? hideBlue : hideRed;
+      let hidden = color === blueTeam ? hideBlue : hideRed;
       let img = color[i] === undefined || hidden
         ? <img key={i} src="https://ddragon.leagueoflegends.com/cdn/14.11.1/img/profileicon/29.png" alt="helmet bro icon"/>
         : <img key={i} src={`https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/${ids[color[i]]}.png`} alt={names[color[i]]}/>
@@ -57,31 +65,94 @@ function App() {
                 </div>
       team.push(
         <div key={i} className="summoner">
-          { color === blue ? [img, div] : [div, img] }
+          { color === blueTeam ? [img, div] : [div, img] }
         </div>
       )
     }
     return team;
   }
 
-  let rerolls = color => {
+  let roll = () => {
+    setRolls(rolls + 1);
+    if(rolls < 2) {
+      let numbers = [...blueTeam, ...redTeam, ...blueRerolls, ...redRerolls];
+      let blue = [...blueRerolls];
+      let red = [...redRerolls];
+      for(let i = 0; i < (Number(bluePlayers) + Number(redPlayers)) * 2; i++) {
+        if(!blueRerolls.length && !redRerolls.length) {
+          if(i % 2 === 0) {
+            let number = Math.floor(Math.random() * ids.length);
+            if(numbers.includes(number)) {
+              i--;
+            } else {
+              numbers.push(number);
+              if(i < bluePlayers * 2) {
+                blue.push(number);
+              } else {
+                red.push(number);
+              }
+            }
+          } else {
+            if(i < bluePlayers * 2) {
+              blue.push(undefined);
+            } else {
+              red.push(undefined);
+            }
+          }
+        } else {
+          if(i % 2 === 1) {
+            let number = Math.floor(Math.random() * ids.length);
+            if(numbers.includes(number)) {
+              i--;
+            } else {
+              numbers.push(number);
+              if(i < bluePlayers * 2) {
+                blue.splice(i, 1, number);
+              } else {
+                red.splice(i - 10, 1, number);
+              }
+            }
+          }
+        }
+      }
+      setBlueRerolls(blue);
+      setRedRerolls(red);
+    }
+  }
+
+  let renderRerolls = color => {
     let rerolls = [];
-    for(let i = 5; i < 15; i++) {
-      let hidden = color === blue ? hideBlue : hideRed;
-      rerolls.push(
-        <div key={i} className="reroll">
-          { color[i] === undefined || hidden 
-            ? null
-            : <img
-                onClick={() => setSelected(color[i])}
-                title={names[color[i]]}
-                src={`https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/${ids[color[i]]}.png`}
-                alt={names[color[i]]}/> }
-        </div>
-      )
+    for(let i = 0; i < 10; i++) {
+      let hidden = color === blueRerolls ? hideBlue : hideRed;
+      rerolls.push(<div key={i} className="reroll">
+                    { color[i] === undefined || hidden
+                      ? null
+                      : <img
+                          title={names[color[i]]}
+                          src={`https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/${ids[color[i]]}.png`}
+                          alt={names[color[i]]}/> }
+                   </div>)
     }
     return rerolls;
   }
+
+  let options = () => {
+    let options = [];
+    for(let i = 5; i > 0; i--) {
+      options.push(<option key={i} value={i}>{i}</option>);
+    }
+    return options;
+  }
+
+  let reset = () => {
+    setBlueTeam([]);
+    setRedTeam([]);
+    setBluePlayers(5);
+    setRedPlayers(5);
+    setBlueRerolls([]);
+    setRedRerolls([]);
+    setRolls(0);
+  } 
 
   return (
     <>
@@ -91,28 +162,52 @@ function App() {
       <main>
         <div style={{display: "flex"}}>
           <div>
-            {team(blue)}
+            {renderTeam(blueTeam)}
           </div>
           <div>
-            {rerolls(blue)}
+            {renderRerolls(blueRerolls)}
           </div>
         </div>
-        <div className="controls">
-          <button onClick={() => createTeams()}>Accept!</button>
-          <h2>Hide Visibility</h2>
-          <div>
-            <label htmlFor="toggleBlue">Blue Team</label>
-            <input id="toggleBlue" type="checkbox" onChange={() => setHideBlue(!hideBlue)}/>
-            <label htmlFor="toggleRed">Red Team</label>
-            <input id="toggleRed" type="checkbox" onChange={() => setHideRed(!hideRed)}/>
+        <div>
+          { !blueTeam.length && !redTeam.length
+            ? <form onSubmit={createTeams} className="container">
+                <h2>Number of Players</h2>
+                <div>
+                 <label>Blue Team</label>
+                <select onChange={e => setBluePlayers(e.target.value)}>
+                  {options()}
+                </select>
+                <label>Red Team</label>
+                <select onChange={e => setRedPlayers(e.target.value)}>
+                  {options()}
+                </select>
+                </div>
+                <button>Start Game</button>
+              </form>
+            : rolls < 2
+            ? <div className="container">
+                <button onClick={() => roll()}>Reroll</button>
+              </div>
+            : <div className="container">
+                <button onClick={() => reset()}>Reset</button>
+              </div>
+          }
+          <div className="container">
+            <h2>Hide Visibility</h2>
+            <div>
+              <label htmlFor="toggleBlue">Blue Team</label>
+              <input id="toggleBlue" type="checkbox" onChange={() => setHideBlue(!hideBlue)}/>
+              <label htmlFor="toggleRed">Red Team</label>
+              <input id="toggleRed" type="checkbox" onChange={() => setHideRed(!hideRed)}/>
+            </div>
           </div>
         </div>
         <div style={{display: "flex"}}>
           <div>
-            {rerolls(red)}
+            {renderRerolls(redRerolls)}
           </div>
           <div>
-            {team(red)}
+            {renderTeam(redTeam)}
           </div>
         </div>
       </main>
